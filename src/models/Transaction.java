@@ -34,7 +34,7 @@ public class Transaction {
     }
 
     public void displayTransactionDetails() {
-        System.out.printf("%-8s %-20s %-10s %+10.2f %12.2f%n",
+        System.out.printf("%-8s | %-20s | %-10s | %-11.2f | %8.2f%n",
                 transactionId,
                 timestamp,
                 type,

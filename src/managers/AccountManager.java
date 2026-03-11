@@ -38,48 +38,51 @@ public class AccountManager {
             return;
         }
 
-        System.out.println("\n" + "=".repeat(100));
-        System.out.println("ACCOUNT LIST");
-        System.out.println("=".repeat(100));
-        System.out.printf("%-10s %-15s %-10s %-10s %-15s %-10s%n",
-                "Acc. No.", "Customer", "Type", "Balance", "Features", "Status");
-        System.out.println("-".repeat(100));
+        System.out.println("\nACCOUNT LISTING");
+        System.out.println("-".repeat(80));
+        System.out.printf("%-8s | %-22s| %-12s   | %-14s | %-18s%n",
+                "ACC NO", "CUSTOMER NAME", "TYPE", "BALANCE", "STATUS");
+        System.out.println("-".repeat(80));
 
         double totalBalance = 0;
-        int savingsCount = 0;
-        int checkingCount = 0;
 
         for (int i = 0; i < accountCount; i++) {
             Account account = accounts[i];
             totalBalance += account.getBalance();
 
-            String features = "";
-            if (account instanceof SavingsAccount) {
-                SavingsAccount sa = (SavingsAccount) account;
-                features = String.format("%.1f%% int, $%.0f min",
-                        sa.getMinimumBalance(), sa.getMinimumBalance());
-                savingsCount++;
-            } else if (account instanceof CheckingAccount) {
-                CheckingAccount ca = (CheckingAccount) account;
-                features = String.format("$%.0f OD, $%.0f fee",
-                        ca.getOverdraftLimit(), ca.getMonthlyFee());
-                checkingCount++;
-            }
-
-            System.out.printf("%-10s %-15s %-10s $%-9.2f %-15s %-10s%n",
+            // Print main account row with pipes as separators
+            System.out.printf("%-8s | %-21s | %-14s | %-14s | %-10s%n",
                     account.getAccountNumber(),
                     account.getCustomer().getName(),
                     account.getAccountType(),
-                    account.getBalance(),
-                    features,
+                    String.format("%,.2f", account.getBalance()),
                     account.getStatus()
             );
-        }
 
-        System.out.println("-".repeat(100));
-        System.out.printf("Total Accounts: %d (Savings: %d, Checking: %d)%n",
-                accountCount, savingsCount, checkingCount);
-        System.out.printf("Total Bank Balance: $%.2f%n", totalBalance);
+            // Print account-specific details indented
+            if (account instanceof SavingsAccount) {
+                SavingsAccount sa = (SavingsAccount) account;
+                System.out.printf("         | %s %.1f%% | %s $%.2f%n",
+                        "Interest Rate:",
+                        sa.getMinimumBalance(),
+                        "Min Balance: $",
+                        sa.getMinimumBalance()
+                );
+                System.out.println("-".repeat(80));
+            } else if (account instanceof CheckingAccount) {
+                CheckingAccount ca = (CheckingAccount) account;
+                System.out.printf("         | %s $%.2f | %s $%.2f%n",
+                        "Overdraft Limit: $",
+                        ca.getOverdraftLimit(),
+                        "Monthly Fee: $",
+                        ca.getMonthlyFee()
+                );
+                System.out.println("-".repeat(80));
+            }
+
+        }
+        System.out.printf("\nTotal Accounts: %d%n", accountCount);
+        System.out.printf("Total Bank Balance: $%,.2f%n", totalBalance);
     }
 
     public double getTotalBalance() {

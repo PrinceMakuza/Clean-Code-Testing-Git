@@ -19,7 +19,7 @@ public class SavingsAccount extends Account {
         System.out.println("Customer: " + getCustomer().getName() + " (" + getCustomer().getCustomerType() + ")");
         System.out.println("Account Type: Savings");
         System.out.printf("Balance: $%.2f%n", getBalance());
-        System.out.println("Interest Rate: " + INTEREST_RATE + "% annually");
+        System.out.println("Interest Rate: " + INTEREST_RATE );
         System.out.printf("Minimum Balance: $%.2f%n", MINIMUM_BALANCE);
         System.out.println("Status: " + getStatus());
     }

@@ -36,16 +36,17 @@ public class TransactionManager {
         }
 
         if (count == 0) {
-            System.out.println("\nNo transactions recorded for this account.");
+            System.out.println("-".repeat(50));
+            System.out.println("No transactions recorded for this account.");
+            System.out.println("-".repeat(50));
             return;
         }
 
         // Sort in reverse chronological order (newest first)
-        // Since we add in chronological order, we'll just iterate backwards
-        System.out.println("\n" + "=".repeat(90));
+        // Since we add in chronological order, we'll just iterate backward
         System.out.println("TRANSACTION HISTORY");
-        System.out.println("=".repeat(90));
-        System.out.printf("%-8s %-20s %-10s %-12s %-12s%n",
+        System.out.println("=".repeat(70));
+        System.out.printf("%-8s | %-20s | %-10s | %-12s | %-12s%n",
                 "TXN ID", "DATE/TIME", "TYPE", "AMOUNT", "BALANCE");
         System.out.println("-".repeat(90));
 

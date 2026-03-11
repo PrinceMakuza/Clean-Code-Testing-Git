@@ -14,14 +14,41 @@ public class Main {
         runApplication();
     }
 
-    private static void initializeSystem() {     // initializes the system with empty data structures and welcomes the user
+    private static void initializeSystem() {
         accountManager = new AccountManager();
         transactionManager = new TransactionManager();
         scanner = new Scanner(System.in);
 
-        // No hard-coded data - system starts empty
+        // Initialize with sample data
+        initializeSampleData();
+
         System.out.println("Bank Account Management System initialized.");
         System.out.println("Start by creating accounts using option 1 from the menu.\n");
+    }
+
+    private static void initializeSampleData() {
+        try {
+            RegularCustomer john = new RegularCustomer("John Smith", 35, "555-0101", "123 Main St");
+            RegularCustomer sarah = new RegularCustomer("Sarah Johnson", 28, "555-0102", "456 Oak Ave");
+            RegularCustomer michael = new RegularCustomer("Michael Chen", 42, "555-0103", "789 Pine Rd");
+            RegularCustomer emily = new RegularCustomer("Emily Brown", 31, "555-0104", "321 Elm St");
+            RegularCustomer david = new RegularCustomer("David Wilson", 45, "555-0105", "654 Maple Dr");
+
+            SavingsAccount acc1 = new SavingsAccount(john, 5250.00);
+            CheckingAccount acc2 = new CheckingAccount(sarah, 3450.00);
+            SavingsAccount acc3 = new SavingsAccount(michael, 15750.00);
+            CheckingAccount acc4 = new CheckingAccount(emily, 890.00);
+            SavingsAccount acc5 = new SavingsAccount(david, 25300.00);
+
+            accountManager.addAccount(acc1);
+            accountManager.addAccount(acc2);
+            accountManager.addAccount(acc3);
+            accountManager.addAccount(acc4);
+            accountManager.addAccount(acc5);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error initializing sample data: " + e.getMessage());
+        }
     }
 
     private static void runApplication() {
@@ -58,33 +85,28 @@ public class Main {
     }
 
     private static void displayMainMenu() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("BANK ACCOUNT MANAGEMENT SYSTEM");
-        System.out.println("=".repeat(60));
+        System.out.println("\n" + "=".repeat(35));
+        System.out.println("  BANK ACCOUNT MANAGEMENT SYSTEM");
+        System.out.println("=".repeat(35));
         System.out.println("1. Create Account");
         System.out.println("2. View Accounts");
         System.out.println("3. Process Transaction");
         System.out.println("4. View Transaction History");
-        System.out.println("5. Exit");
-        System.out.println("-".repeat(60));
+        System.out.println("5. Exit\n");
     }
 
     private static void createAccount() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("CREATE ACCOUNT");
-        System.out.println("=".repeat(60));
+        System.out.println("\nCREATE ACCOUNT");
+        System.out.println("-".repeat(14));
 
-        // Get customer details
-        System.out.println("\n--- Customer Information ---");
         String name = InputValidator.getStringInput(scanner, "Enter customer name: ");
         int age = InputValidator.getIntInput(scanner, "Enter customer age: ", 18, 120);
         String contact = InputValidator.getStringInput(scanner, "Enter contact number: ");
         String address = InputValidator.getStringInput(scanner, "Enter address: ");
 
-        // Select customer type
         System.out.println("\nCustomer type:");
-        System.out.println("1. Regular Customer (Standard services)");
-        System.out.println("2. Premium Customer (No fees, priority service, min balance $10,000)");
+        System.out.println("1. Regular Customer (Standard banking services)");
+        System.out.println("2. Premium Customer (Enhanced benefits, min balance $10,000)");
         int customerType = InputValidator.getIntInput(scanner, "Select type (1-2): ", 1, 2);
 
         Customer customer;
@@ -94,28 +116,25 @@ public class Main {
             customer = new PremiumCustomer(name, age, contact, address);
         }
 
-        // Select account type
         System.out.println("\nAccount type:");
-        System.out.println("1. Savings Account (3.5% interest, min balance $500)");
-        System.out.println("2. Checking Account (Overdraft $1000, monthly fee $10)");
+        System.out.println("1. Savings Account (Interest: 3.5%, Min balance: $500)");
+        System.out.println("2. Checking Account (Overdraft: $1000, Monthly fee $10)");
         int accountType = InputValidator.getIntInput(scanner, "Select type (1-2): ", 1, 2);
 
-        // Get initial deposit
         double minDeposit = (accountType == 1) ? 500.0 : 0.0;
         double initialDeposit;
 
         while (true) {
             initialDeposit = InputValidator.getPositiveDoubleInput(scanner,
-                    "Enter initial deposit amount: $");
+                    "\nEnter initial deposit amount: $");
 
             if (accountType == 1 && initialDeposit < minDeposit) {
-                System.out.printf("Savings account requires minimum deposit of $%.2f%n", minDeposit);
+                System.out.printf("Savings account requires minimum deposit of $%.2f%n\n", minDeposit);
             } else {
                 break;
             }
         }
 
-        // Create account
         Account account = null;
         try {
             if (accountType == 1) {
@@ -128,12 +147,10 @@ public class Main {
             return;
         }
 
-        // Add account to manager
         if (accountManager.addAccount(account)) {
             System.out.println("\n✓ Account created successfully!");
             account.displayAccountDetails();
 
-            // Record initial deposit transaction
             Transaction initialTxn = new Transaction(
                     account.getAccountNumber(),
                     "DEPOSIT",
@@ -149,9 +166,6 @@ public class Main {
     }
 
     private static void viewAccounts() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("VIEW ACCOUNTS");
-        System.out.println("=".repeat(60));
 
         if (accountManager.getAccountCount() == 0) {
             System.out.println("No accounts registered yet. Use option 1 to create accounts.");
@@ -162,16 +176,15 @@ public class Main {
     }
 
     private static void processTransaction() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("PROCESS TRANSACTION");
-        System.out.println("=".repeat(60));
+        System.out.println("\nPROCESS TRANSACTION");
+        System.out.println("-".repeat(20));
 
         if (accountManager.getAccountCount() == 0) {
             System.out.println("No accounts available. Please create an account first.");
             return;
         }
 
-        String accountNumber = InputValidator.getStringInput(scanner, "Enter Account Number: ");
+        String accountNumber = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
         Account account = accountManager.findAccount(accountNumber);
 
         if (account == null) {
@@ -187,15 +200,14 @@ public class Main {
         System.out.println("\nTransaction type:");
         System.out.println("1. Deposit");
         System.out.println("2. Withdrawal");
-        int txnType = InputValidator.getIntInput(scanner, "Select type (1-2): ", 1, 2);
+        int txnType = InputValidator.getIntInput(scanner, "\nSelect type (1-2): ", 1, 2);
 
-        double amount = InputValidator.getPositiveDoubleInput(scanner, "Enter amount: $");
+        double amount = InputValidator.getPositiveDoubleInput(scanner, "\nEnter amount: $");
 
-        // Validate withdrawal based on account type
         boolean valid = true;
         String validationMessage = "";
 
-        if (txnType == 2) { // Withdrawal
+        if (txnType == 2) {
             if (account instanceof SavingsAccount) {
                 SavingsAccount sa = (SavingsAccount) account;
                 double newBalance = account.getBalance() - amount;
@@ -224,29 +236,26 @@ public class Main {
             return;
         }
 
-        // Show confirmation
         double previousBalance = account.getBalance();
         String type = (txnType == 1) ? "DEPOSIT" : "WITHDRAWAL";
         double newBalance = (txnType == 1) ? previousBalance + amount : previousBalance - amount;
 
-        System.out.println("\n" + "=".repeat(60));
         System.out.println("TRANSACTION CONFIRMATION");
-        System.out.println("=".repeat(60));
+        System.out.println("-".repeat(30));
 
-        // Display transaction details
         Transaction preview = new Transaction(accountNumber, type, amount, newBalance);
-        System.out.printf("%-8s: %s%n", "TXN ID", preview.getTransactionId());
+        System.out.printf("%-8s: %s%n", "Transaction ID", preview.getTransactionId());
         System.out.printf("%-8s: %s%n", "Account", accountNumber);
         System.out.printf("%-8s: %s%n", "Type", type);
         System.out.printf("%-8s: $%.2f%n", "Amount", amount);
-        System.out.printf("%-8s: $%.2f%n", "Previous", previousBalance);
-        System.out.printf("%-8s: $%.2f%n", "New", newBalance);
+        System.out.printf("%-8s: $%.2f%n", "Previous Balance", previousBalance);
+        System.out.printf("%-8s: $%.2f%n", "New Balance", newBalance);
         System.out.printf("%-8s: %s%n", "Date/Time", preview.getTimestamp());
+        System.out.println("-".repeat(30));
 
         boolean confirm = InputValidator.getYesNoInput(scanner, "\nConfirm transaction?");
 
         if (confirm) {
-            // Process transaction
             boolean success;
             if (txnType == 1) {
                 success = account.deposit(amount);
@@ -272,16 +281,15 @@ public class Main {
     }
 
     private static void viewTransactionHistory() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("VIEW TRANSACTION HISTORY");
-        System.out.println("=".repeat(60));
+        System.out.println("\nVIEW TRANSACTION HISTORY");
+        System.out.println("-".repeat(30));
 
         if (accountManager.getAccountCount() == 0) {
             System.out.println("No accounts available.");
             return;
         }
 
-        String accountNumber = InputValidator.getStringInput(scanner, "Enter Account Number: ");
+        String accountNumber = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
         Account account = accountManager.findAccount(accountNumber);
 
         if (account == null) {
@@ -292,19 +300,14 @@ public class Main {
         System.out.printf("%nAccount: %s - %s%n",
                 accountNumber, account.getCustomer().getName());
         System.out.println("Account Type: " + account.getAccountType());
-        System.out.printf("Current Balance: $%.2f%n", account.getBalance());
+        System.out.printf("Current Balance: $%.2f%n\n", account.getBalance());
 
         transactionManager.viewTransactionsByAccount(accountNumber);
     }
 
     private static void exitApplication() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("Thank you for using Bank Account Management System!");
-        System.out.printf("Session Summary: %d accounts created, %d transactions processed%n",
-                accountManager.getAccountCount(),
-                transactionManager.getTransactionCount());
+        System.out.println("\nThank you for using Bank Account Management System!");
         System.out.println("Goodbye!");
-        System.out.println("=".repeat(60));
         scanner.close();
     }
 }
