@@ -24,8 +24,10 @@ public class AccountManager {
     }
 
     public Account findAccount(String accountNumber) {
+        String searchInput = accountNumber.toUpperCase();
+
         for (int i = 0; i < accountCount; i++) {
-            if (accounts[i].getAccountNumber().equals(accountNumber)) {
+            if (accounts[i].getAccountNumber().toUpperCase().equals(searchInput)) {
                 return accounts[i];
             }
         }
@@ -58,7 +60,6 @@ public class AccountManager {
                     account.getStatus()
             );
 
-            // Print account-specific details indented
             if (account instanceof SavingsAccount) {
                 SavingsAccount sa = (SavingsAccount) account;
                 System.out.printf("         | %s %.1f%% | %s $%.2f%n",
@@ -78,45 +79,12 @@ public class AccountManager {
                 );
                 System.out.println("-".repeat(80));
             }
-
         }
         System.out.printf("\nTotal Accounts: %d%n", accountCount);
         System.out.printf("Total Bank Balance: $%,.2f%n", totalBalance);
     }
 
-    public double getTotalBalance() {
-        double total = 0;
-        for (int i = 0; i < accountCount; i++) {
-            total += accounts[i].getBalance();
-        }
-        return total;
-    }
-
     public int getAccountCount() {
         return accountCount;
-    }
-
-    public Account[] getAccounts() {
-        return accounts;
-    }
-
-    public int getSavingsCount() {
-        int count = 0;
-        for (int i = 0; i < accountCount; i++) {
-            if (accounts[i] instanceof SavingsAccount) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int getCheckingCount() {
-        int count = 0;
-        for (int i = 0; i < accountCount; i++) {
-            if (accounts[i] instanceof CheckingAccount) {
-                count++;
-            }
-        }
-        return count;
     }
 }

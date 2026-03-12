@@ -1,7 +1,6 @@
 import models.*;
 import management.*;
 import utils.InputValidator;
-
 import java.util.Scanner;
 
 public class Main {
@@ -18,9 +17,7 @@ public class Main {
         accountManager = new AccountManager();
         transactionManager = new TransactionManager();
         scanner = new Scanner(System.in);
-
         initializeSampleData();
-
         System.out.println("Bank Account Management System initialized.\n");
     }
 
@@ -32,18 +29,16 @@ public class Main {
             RegularCustomer emily = new RegularCustomer("Emily Brown", 31, "555-0104", "321 Elm St");
             RegularCustomer david = new RegularCustomer("David Wilson", 45, "555-0105", "654 Maple Dr");
 
-            SavingsAccount acc1 = new SavingsAccount(john, 5250.00);
-            CheckingAccount acc2 = new CheckingAccount(sarah, 3450.00);
-            SavingsAccount acc3 = new SavingsAccount(michael, 15750.00);
-            CheckingAccount acc4 = new CheckingAccount(emily, 890.00);
-            SavingsAccount acc5 = new SavingsAccount(david, 25300.00);
+            accountManager.addAccount(new SavingsAccount(john, 5250.00));
+            accountManager.addAccount(new CheckingAccount(sarah, 3450.00));
+            accountManager.addAccount(new SavingsAccount(michael, 15750.00));
+            accountManager.addAccount(new CheckingAccount(emily, 890.00));
+            accountManager.addAccount(new SavingsAccount(david, 25300.00));
 
-            accountManager.addAccount(acc1);
-            accountManager.addAccount(acc2);
-            accountManager.addAccount(acc3);
-            accountManager.addAccount(acc4);
-            accountManager.addAccount(acc5);
-
+            transactionManager.addTransaction(new Transaction("ACC001", "DEPOSIT", 2000.00, 7250.00));
+            transactionManager.addTransaction(new Transaction("ACC001", "WITHDRAWAL", 500.00, 6750.00));
+            transactionManager.addTransaction(new Transaction("ACC001", "DEPOSIT", 1500.00, 8250.00));
+            transactionManager.addTransaction(new Transaction("ACC001", "WITHDRAWAL", 3000.00, 5250.00));
         } catch (IllegalArgumentException e) {
             System.out.println("Error initializing sample data: " + e.getMessage());
         }
@@ -51,30 +46,16 @@ public class Main {
 
     private static void runApplication() {
         boolean running = true;
-
         while (running) {
             displayMainMenu();
             int choice = InputValidator.getIntInput(scanner, "Enter choice: ", 1, 5);
-
             switch (choice) {
-                case 1:
-                    createAccount();
-                    break;
-                case 2:
-                    viewAccounts();
-                    break;
-                case 3:
-                    processTransaction();
-                    break;
-                case 4:
-                    viewTransactionHistory();
-                    break;
-                case 5:
-                    running = false;
-                    exitApplication();
-                    break;
+                case 1: createAccount(); break;
+                case 2: viewAccounts(); break;
+                case 3: processTransaction(); break;
+                case 4: viewTransactionHistory(); break;
+                case 5: running = false; exitApplication(); break;
             }
-
             if (running && choice != 5) {
                 System.out.println("\nPress Enter to continue...");
                 scanner.nextLine();
@@ -107,12 +88,9 @@ public class Main {
         System.out.println("2. Premium Customer (Enhanced benefits, min balance $10,000)");
         int customerType = InputValidator.getIntInput(scanner, "Select type (1-2): ", 1, 2);
 
-        Customer customer;
-        if (customerType == 1) {
-            customer = new RegularCustomer(name, age, contact, address);
-        } else {
-            customer = new PremiumCustomer(name, age, contact, address);
-        }
+        Customer customer = (customerType == 1)
+                ? new RegularCustomer(name, age, contact, address)
+                : new PremiumCustomer(name, age, contact, address);
 
         System.out.println("\nAccount type:");
         System.out.println("1. Savings Account (Interest: 3.5%, Min balance: $500)");
@@ -123,9 +101,7 @@ public class Main {
         double initialDeposit;
 
         while (true) {
-            initialDeposit = InputValidator.getPositiveDoubleInput(scanner,
-                    "\nEnter initial deposit amount: $");
-
+            initialDeposit = InputValidator.getPositiveDoubleInput(scanner, "\nEnter initial deposit amount: $");
             if (accountType == 1 && initialDeposit < minDeposit) {
                 System.out.printf("Savings account requires minimum deposit of $%.2f%n\n", minDeposit);
             } else {
@@ -133,43 +109,30 @@ public class Main {
             }
         }
 
-        Account account = null;
         try {
-            if (accountType == 1) {
-                account = new SavingsAccount(customer, initialDeposit);
+            Account account = (accountType == 1)
+                    ? new SavingsAccount(customer, initialDeposit)
+                    : new CheckingAccount(customer, initialDeposit);
+
+            if (accountManager.addAccount(account)) {
+                System.out.println("\n✓ Account created successfully!");
+                account.displayAccountDetails();
+                transactionManager.addTransaction(new Transaction(
+                        account.getAccountNumber(), "DEPOSIT", initialDeposit, initialDeposit));
+                System.out.printf("%nTotal accounts in system: %d%n", accountManager.getAccountCount());
             } else {
-                account = new CheckingAccount(customer, initialDeposit);
+                System.out.println("\n✗ Failed to create account. Maximum capacity reached.");
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
-            return;
-        }
-
-        if (accountManager.addAccount(account)) {
-            System.out.println("\n✓ Account created successfully!");
-            account.displayAccountDetails();
-
-            Transaction initialTxn = new Transaction(
-                    account.getAccountNumber(),
-                    "DEPOSIT",
-                    initialDeposit,
-                    initialDeposit
-            );
-            transactionManager.addTransaction(initialTxn);
-
-            System.out.printf("%nTotal accounts in system: %d%n", accountManager.getAccountCount());
-        } else {
-            System.out.println("\n✗ Failed to create account. Maximum capacity reached.");
         }
     }
 
     private static void viewAccounts() {
-
         if (accountManager.getAccountCount() == 0) {
             System.out.println("No accounts registered yet. Use option 1 to create accounts.");
             return;
         }
-
         accountManager.viewAllAccounts();
     }
 
@@ -199,46 +162,31 @@ public class Main {
         System.out.println("1. Deposit");
         System.out.println("2. Withdrawal");
         int txnType = InputValidator.getIntInput(scanner, "\nSelect type (1-2): ", 1, 2);
-
         double amount = InputValidator.getPositiveDoubleInput(scanner, "\nEnter amount: $");
-
-        boolean valid = true;
-        String validationMessage = "";
 
         if (txnType == 2) {
             if (account instanceof SavingsAccount) {
                 SavingsAccount sa = (SavingsAccount) account;
-                double newBalance = account.getBalance() - amount;
-                if (newBalance < sa.getMinimumBalance()) {
-                    valid = false;
-                    validationMessage = String.format(
-                            "Withdrawal would drop balance below minimum requirement of $%.2f",
-                            sa.getMinimumBalance()
-                    );
+                if (account.getBalance() - amount < sa.getMinimumBalance()) {
+                    System.out.printf("\n✗ Withdrawal would drop balance below minimum requirement of $%.2f%n",
+                            sa.getMinimumBalance());
+                    return;
                 }
             } else if (account instanceof CheckingAccount) {
                 CheckingAccount ca = (CheckingAccount) account;
-                double newBalance = account.getBalance() - amount;
-                if (newBalance < -ca.getOverdraftLimit()) {
-                    valid = false;
-                    validationMessage = String.format(
-                            "Withdrawal exceeds overdraft limit of $%.2f",
-                            ca.getOverdraftLimit()
-                    );
+                if (account.getBalance() - amount < -ca.getOverdraftLimit()) {
+                    System.out.printf("\n✗ Withdrawal exceeds overdraft limit of $%.2f%n",
+                            ca.getOverdraftLimit());
+                    return;
                 }
             }
-        }
-
-        if (!valid) {
-            System.out.println("\n✗ " + validationMessage);
-            return;
         }
 
         double previousBalance = account.getBalance();
         String type = (txnType == 1) ? "DEPOSIT" : "WITHDRAWAL";
         double newBalance = (txnType == 1) ? previousBalance + amount : previousBalance - amount;
 
-        System.out.println("TRANSACTION CONFIRMATION");
+        System.out.println("\nTRANSACTION CONFIRMATION");
         System.out.println("-".repeat(30));
 
         Transaction preview = new Transaction(accountNumber, type, amount, newBalance);
@@ -251,24 +199,11 @@ public class Main {
         System.out.printf("%-8s: %s%n", "Date/Time", preview.getTimestamp());
         System.out.println("-".repeat(30));
 
-        boolean confirm = InputValidator.getYesNoInput(scanner, "\nConfirm transaction?");
-
-        if (confirm) {
-            boolean success;
-            if (txnType == 1) {
-                success = account.deposit(amount);
-            } else {
-                success = account.withdraw(amount);
-            }
-
+        if (InputValidator.getYesNoInput(scanner, "\nConfirm transaction?")) {
+            boolean success = (txnType == 1) ? account.deposit(amount) : account.withdraw(amount);
             if (success) {
-                Transaction transaction = new Transaction(
-                        accountNumber,
-                        type,
-                        amount,
-                        account.getBalance()
-                );
-                transactionManager.addTransaction(transaction);
+                transactionManager.addTransaction(new Transaction(
+                        accountNumber, type, amount, account.getBalance()));
                 System.out.println("\n✓ Transaction completed successfully!");
             } else {
                 System.out.println("\n✗ Transaction failed!");
@@ -295,11 +230,9 @@ public class Main {
             return;
         }
 
-        System.out.printf("%nAccount: %s - %s%n",
-                accountNumber, account.getCustomer().getName());
+        System.out.printf("%nAccount: %s - %s%n", accountNumber, account.getCustomer().getName());
         System.out.println("Account Type: " + account.getAccountType());
         System.out.printf("Current Balance: $%.2f%n\n", account.getBalance());
-
         transactionManager.viewTransactionsByAccount(accountNumber);
     }
 

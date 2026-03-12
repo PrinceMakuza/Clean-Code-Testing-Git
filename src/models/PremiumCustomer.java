@@ -23,13 +23,8 @@ public class PremiumCustomer extends Customer {
     public String getCustomerType() {
         return "Premium";
     }
-
     @Override
     public boolean hasWaivedFees() {
-        return true; // Premium customers have fees waived
-    }
-
-    public double getMinimumBalance() {
-        return MINIMUM_BALANCE;
+        return true;
     }
 }

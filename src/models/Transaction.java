@@ -35,12 +35,7 @@ public class Transaction {
 
     public void displayTransactionDetails() {
         System.out.printf("%-8s | %-20s | %-10s | %-11.2f | %8.2f%n",
-                transactionId,
-                timestamp,
-                type,
-                amount,
-                balanceAfter
-        );
+                transactionId, timestamp, type, amount, balanceAfter);
     }
 
     public String getTransactionId() {
@@ -55,15 +50,7 @@ public class Transaction {
     public double getAmount() {
         return amount;
     }
-    public double getBalanceAfter() {
-        return balanceAfter;
-    }
     public String getTimestamp() {
         return timestamp;
-    }
-
-    // Reset counter for testing
-    public static void resetCounter() {
-        transactionCounter = 0;
     }
 }

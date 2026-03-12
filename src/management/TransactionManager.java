@@ -22,7 +22,6 @@ public class TransactionManager {
     }
 
     public void viewTransactionsByAccount(String accountNumber) {
-        // All transactions for this account
         Transaction[] accountTransactions = new Transaction[transactionCount];
         int count = 0;
 
@@ -40,35 +39,22 @@ public class TransactionManager {
             return;
         }
 
-        // Sort in reverse chronological order (newest first)
-        // Since we add in chronological order, we'll just iterate backward
         System.out.println("TRANSACTION HISTORY");
         System.out.println("-".repeat(70));
         System.out.printf("%-8s | %-20s | %-10s | %-12s | %-12s%n",
                 "TXN ID", "DATE/TIME", "TYPE", "AMOUNT", "BALANCE");
         System.out.println("-".repeat(90));
 
-        double totalDeposits = 0;
-        double totalWithdrawals = 0;
-
-        // Display in reverse order (newest first)
         for (int i = count - 1; i >= 0; i--) {
-            Transaction t = accountTransactions[i];
-            t.displayTransactionDetails();
-
-            if (t.getType().equalsIgnoreCase("DEPOSIT")) {
-                totalDeposits += t.getAmount();
-            } else {
-                totalWithdrawals += t.getAmount();
-            }
+            accountTransactions[i].displayTransactionDetails();
         }
 
         System.out.println("-".repeat(90));
         System.out.printf("Total Transactions: %d%n", count);
-        System.out.printf("Total Deposits: $%.2f%n", totalDeposits);
-        System.out.printf("Total Withdrawals: $%.2f%n", totalWithdrawals);
+        System.out.printf("Total Deposits: $%.2f%n", calculateTotalDeposits(accountNumber));
+        System.out.printf("Total Withdrawals: $%.2f%n", calculateTotalWithdrawals(accountNumber));
 
-        double netChange = totalDeposits - totalWithdrawals;
+        double netChange = calculateTotalDeposits(accountNumber) - calculateTotalWithdrawals(accountNumber);
         System.out.printf("Net Change: %s$%.2f%n",
                 netChange >= 0 ? "+" : "-", Math.abs(netChange));
     }
@@ -93,13 +79,5 @@ public class TransactionManager {
             }
         }
         return total;
-    }
-
-    public int getTransactionCount() {
-        return transactionCount;
-    }
-
-    public Transaction[] getTransactions() {
-        return transactions;
     }
 }

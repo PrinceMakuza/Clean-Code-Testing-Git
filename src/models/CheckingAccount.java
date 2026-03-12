@@ -15,7 +15,7 @@ public class CheckingAccount extends Account {
         System.out.println("Account Type: Checking");
         System.out.printf("Balance: $%.2f%n", getBalance());
         System.out.printf("Overdraft Limit: $%.2f%n", OVERDRAFT_LIMIT);
-        System.out.printf("Monthly Fee: $%.2f%n (WAIVED - Premium Customer)", getCustomer().hasWaivedFees() ? 0.0 : MONTHLY_FEE);
+        System.out.printf("Monthly Fee: $%.2f%n", getMonthlyFee());
         System.out.println("Status: " + getStatus());
     }
 
@@ -27,7 +27,6 @@ public class CheckingAccount extends Account {
     @Override
     public boolean withdraw(double amount) {
         double newBalance = getBalance() - amount;
-
         if (newBalance >= -OVERDRAFT_LIMIT) {
             setBalance(newBalance);
             return true;
@@ -35,17 +34,15 @@ public class CheckingAccount extends Account {
         return false;
     }
 
+    public double getOverdraftLimit() {
+        return OVERDRAFT_LIMIT;
+    }
+    public double getMonthlyFee() {
+        return getCustomer().hasWaivedFees() ? 0.0 : MONTHLY_FEE;
+    }
     public void applyMonthlyFee() {
         if (!getCustomer().hasWaivedFees()) {
             setBalance(getBalance() - MONTHLY_FEE);
         }
-    }
-
-    public double getOverdraftLimit() {
-        return OVERDRAFT_LIMIT;
-    }
-
-    public double getMonthlyFee() {
-        return getCustomer().hasWaivedFees() ? 0.0 : MONTHLY_FEE;
     }
 }

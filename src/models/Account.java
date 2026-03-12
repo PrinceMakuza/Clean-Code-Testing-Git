@@ -3,7 +3,7 @@ package models;
 import interfaces.Transactable;
 
 public abstract class Account implements Transactable {
-    private final String accountNumber;
+    private String accountNumber;
     private Customer customer;
     private double balance;
     private String status;
@@ -15,7 +15,6 @@ public abstract class Account implements Transactable {
         return String.format("ACC%03d", accountCounter);
     }
 
-    // Constructor
     public Account(Customer customer, double initialDeposit) {
         this.accountNumber = generateAccountNumber();
         this.customer = customer;
@@ -26,7 +25,6 @@ public abstract class Account implements Transactable {
     public abstract void displayAccountDetails();
     public abstract String getAccountType();
 
-    // Deposit Method
     public boolean deposit(double amount) {
         if (amount > 0) {
             this.balance += amount;
@@ -35,7 +33,6 @@ public abstract class Account implements Transactable {
         return false;
     }
 
-    // Abstract Method for Withdraw
     public abstract boolean withdraw(double amount);
 
     @Override
@@ -60,16 +57,7 @@ public abstract class Account implements Transactable {
     public String getStatus() {
         return status;
     }
-
     public void setBalance(double balance) {
         this.balance = balance;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    // Reset counter for testing
-    public static void resetCounter() {
-        accountCounter = 0;
     }
 }

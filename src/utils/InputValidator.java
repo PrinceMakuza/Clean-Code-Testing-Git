@@ -24,21 +24,6 @@ public class InputValidator {
         }
     }
 
-    public static double getDoubleInput(Scanner scanner, String prompt, double min, double max) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                double value = Double.parseDouble(scanner.nextLine().trim());
-                if (value >= min && value <= max) {
-                    return value;
-                }
-                System.out.printf("Please enter an amount between $%.2f and $%.2f.%n", min, max);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-            }
-        }
-    }
-
     public static double getPositiveDoubleInput(Scanner scanner, String prompt) {
         while (true) {
             try {

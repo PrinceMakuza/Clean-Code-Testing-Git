@@ -21,9 +21,8 @@ public class RegularCustomer extends Customer {
     public String getCustomerType() {
         return "Regular";
     }
-
     @Override
     public boolean hasWaivedFees() {
-        return false; // Regular customers pay fees
+        return false;
     }
 }

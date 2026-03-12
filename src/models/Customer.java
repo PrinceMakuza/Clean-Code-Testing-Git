@@ -7,7 +7,6 @@ public abstract class Customer {
     private String contact;
     private String address;
 
-
     private static int customerCounter = 0;
 
     private static String generateCustomerId() {
@@ -15,7 +14,6 @@ public abstract class Customer {
         return String.format("CUS%03d", customerCounter);
     }
 
-    // Constructor
     public Customer(String name, int age, String contact, String address) {
         this.customerId = generateCustomerId();
         this.name = name;
@@ -27,7 +25,6 @@ public abstract class Customer {
     public abstract void displayCustomerDetails();
     public abstract String getCustomerType();
     public abstract boolean hasWaivedFees();
-
 
     public String getCustomerId() {
         return customerId;
@@ -43,10 +40,5 @@ public abstract class Customer {
     }
     public String getAddress() {
         return address;
-    }
-
-    // Reset counter for testing
-    public static void resetCounter() {
-        customerCounter = 0;
     }
 }
