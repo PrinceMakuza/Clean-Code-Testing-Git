@@ -1,5 +1,5 @@
 import models.*;
-import managers.*;
+import management.*;
 import utils.InputValidator;
 
 import java.util.Scanner;
@@ -19,11 +19,9 @@ public class Main {
         transactionManager = new TransactionManager();
         scanner = new Scanner(System.in);
 
-        // Initialize with sample data
         initializeSampleData();
 
-        System.out.println("Bank Account Management System initialized.");
-        System.out.println("Start by creating accounts using option 1 from the menu.\n");
+        System.out.println("Bank Account Management System initialized.\n");
     }
 
     private static void initializeSampleData() {

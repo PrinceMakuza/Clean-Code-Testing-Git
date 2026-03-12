@@ -1,4 +1,4 @@
-package managers;
+package management;
 
 import models.Account;
 import models.SavingsAccount;
@@ -50,7 +50,6 @@ public class AccountManager {
             Account account = accounts[i];
             totalBalance += account.getBalance();
 
-            // Print main account row with pipes as separators
             System.out.printf("%-8s | %-21s | %-14s | %-14s | %-10s%n",
                     account.getAccountNumber(),
                     account.getCustomer().getName(),

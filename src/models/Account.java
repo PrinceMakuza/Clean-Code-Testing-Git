@@ -1,14 +1,19 @@
 package models;
 
+import interfaces.Transactable;
+
 public abstract class Account implements Transactable {
-    // Private fields - encapsulation
-    private String accountNumber;
+    private final String accountNumber;
     private Customer customer;
     private double balance;
     private String status;
 
-    // Static field for ID generation
     private static int accountCounter = 0;
+
+    private static String generateAccountNumber() {
+        accountCounter++;
+        return String.format("ACC%03d", accountCounter);
+    }
 
     // Constructor
     public Account(Customer customer, double initialDeposit) {
@@ -18,17 +23,10 @@ public abstract class Account implements Transactable {
         this.status = "Active";
     }
 
-    // Static method to generate unique account number
-    private static String generateAccountNumber() {
-        accountCounter++;
-        return String.format("ACC%03d", accountCounter);
-    }
-
-    // Abstract methods
     public abstract void displayAccountDetails();
     public abstract String getAccountType();
 
-    // Concrete methods
+    // Deposit Method
     public boolean deposit(double amount) {
         if (amount > 0) {
             this.balance += amount;
@@ -37,6 +35,7 @@ public abstract class Account implements Transactable {
         return false;
     }
 
+    // Abstract Method for Withdraw
     public abstract boolean withdraw(double amount);
 
     @Override
@@ -49,14 +48,25 @@ public abstract class Account implements Transactable {
         return false;
     }
 
-    // Getters and Setters
-    public String getAccountNumber() { return accountNumber; }
-    public Customer getCustomer() { return customer; }
-    public double getBalance() { return balance; }
-    public String getStatus() { return status; }
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    public Customer getCustomer() {
+        return customer;
+    }
+    public double getBalance() {
+        return balance;
+    }
+    public String getStatus() {
+        return status;
+    }
 
-    public void setBalance(double balance) { this.balance = balance; }
-    public void setStatus(String status) { this.status = status; }
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     // Reset counter for testing
     public static void resetCounter() {

@@ -4,14 +4,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Transaction {
-    private static int transactionCounter = 0;
-
     private String transactionId;
     private String accountNumber;
     private String type;
     private double amount;
     private double balanceAfter;
     private String timestamp;
+
+    private static int transactionCounter = 0;
+
+    private static String generateTransactionId() {
+        transactionCounter++;
+        return String.format("TXN%03d", transactionCounter);
+    }
 
     public Transaction(String accountNumber, String type, double amount, double balanceAfter) {
         this.transactionId = generateTransactionId();
@@ -20,11 +25,6 @@ public class Transaction {
         this.amount = amount;
         this.balanceAfter = balanceAfter;
         this.timestamp = getCurrentTimestamp();
-    }
-
-    private static String generateTransactionId() {
-        transactionCounter++;
-        return String.format("TXN%03d", transactionCounter);
     }
 
     private String getCurrentTimestamp() {
@@ -43,13 +43,24 @@ public class Transaction {
         );
     }
 
-    // Getters
-    public String getTransactionId() { return transactionId; }
-    public String getAccountNumber() { return accountNumber; }
-    public String getType() { return type; }
-    public double getAmount() { return amount; }
-    public double getBalanceAfter() { return balanceAfter; }
-    public String getTimestamp() { return timestamp; }
+    public String getTransactionId() {
+        return transactionId;
+    }
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    public String getType() {
+        return type;
+    }
+    public double getAmount() {
+        return amount;
+    }
+    public double getBalanceAfter() {
+        return balanceAfter;
+    }
+    public String getTimestamp() {
+        return timestamp;
+    }
 
     // Reset counter for testing
     public static void resetCounter() {

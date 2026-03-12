@@ -1,13 +1,12 @@
 package models;
 
 public class SavingsAccount extends Account {
-    private static final double INTEREST_RATE = 3.5; // 3.5% annually
+    private static final double INTEREST_RATE = 3.5; //annually
     private static final double MINIMUM_BALANCE = 500.0;
 
     public SavingsAccount(Customer customer, double initialDeposit) {
         super(customer, initialDeposit);
 
-        // Validate minimum balance requirement
         if (initialDeposit < MINIMUM_BALANCE) {
             throw new IllegalArgumentException("Savings account requires minimum balance of $" + MINIMUM_BALANCE);
         }
@@ -33,7 +32,6 @@ public class SavingsAccount extends Account {
     public boolean withdraw(double amount) {
         double newBalance = getBalance() - amount;
 
-        // Check if withdrawal would maintain minimum balance
         if (newBalance >= MINIMUM_BALANCE) {
             setBalance(newBalance);
             return true;

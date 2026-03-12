@@ -1,8 +1,6 @@
-package managers;
+package management;
 
 import models.Transaction;
-// import java.util.Arrays;
-// import java.util.Comparator;
 
 public class TransactionManager {
     private Transaction[] transactions;
@@ -24,7 +22,7 @@ public class TransactionManager {
     }
 
     public void viewTransactionsByAccount(String accountNumber) {
-        // First, collect all transactions for this account
+        // All transactions for this account
         Transaction[] accountTransactions = new Transaction[transactionCount];
         int count = 0;
 
@@ -45,7 +43,7 @@ public class TransactionManager {
         // Sort in reverse chronological order (newest first)
         // Since we add in chronological order, we'll just iterate backward
         System.out.println("TRANSACTION HISTORY");
-        System.out.println("=".repeat(70));
+        System.out.println("-".repeat(70));
         System.out.printf("%-8s | %-20s | %-10s | %-12s | %-12s%n",
                 "TXN ID", "DATE/TIME", "TYPE", "AMOUNT", "BALANCE");
         System.out.println("-".repeat(90));
