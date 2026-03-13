@@ -24,9 +24,9 @@ public class Main {
     private static void initializeSampleData() {
         try {
             RegularCustomer john = new RegularCustomer("John Smith", 35, "555-0101", "123 Main St");
-            RegularCustomer sarah = new RegularCustomer("Sarah Johnson", 28, "555-0102", "456 Oak Ave");
+            PremiumCustomer sarah = new PremiumCustomer("Sarah Johnson", 28, "555-0102", "456 Oak Ave");
             RegularCustomer michael = new RegularCustomer("Michael Chen", 42, "555-0103", "789 Pine Rd");
-            RegularCustomer emily = new RegularCustomer("Emily Brown", 31, "555-0104", "321 Elm St");
+            PremiumCustomer emily = new PremiumCustomer("Emily Brown", 31, "555-0104", "321 Elm St");
             RegularCustomer david = new RegularCustomer("David Wilson", 45, "555-0105", "654 Maple Dr");
 
             accountManager.addAccount(new SavingsAccount(john, 5250.00));
@@ -48,15 +48,29 @@ public class Main {
         boolean running = true;
         while (running) {
             displayMainMenu();
-            int choice = InputValidator.getIntInput(scanner, "Enter choice: ", 1, 5);
+            int choice = InputValidator.getIntInput(scanner, "Enter choice: ", 1, 6);
             switch (choice) {
-                case 1: createAccount(); break;
-                case 2: viewAccounts(); break;
-                case 3: processTransaction(); break;
-                case 4: viewTransactionHistory(); break;
-                case 5: running = false; exitApplication(); break;
+                case 1:
+                    createAccount();
+                    break;
+                case 2:
+                    viewAccounts();
+                    break;
+                case 3:
+                    displayCustomer();
+                    break;
+                case 4:
+                    processTransaction();
+                    break;
+                case 5:
+                    viewTransactionHistory();
+                    break;
+                case 6:
+                    running = false;
+                    exitApplication();
+                    break;
             }
-            if (running && choice != 5) {
+            if (running && choice != 6) {
                 System.out.println("\nPress Enter to continue...");
                 scanner.nextLine();
             }
@@ -69,9 +83,40 @@ public class Main {
         System.out.println("=".repeat(35));
         System.out.println("1. Create Account");
         System.out.println("2. View Accounts");
-        System.out.println("3. Process Transaction");
-        System.out.println("4. View Transaction History");
-        System.out.println("5. Exit\n");
+        System.out.println("3. Display Customer");  // NEW MENU OPTION
+        System.out.println("4. Process Transaction");
+        System.out.println("5. View Transaction History");
+        System.out.println("6. Exit\n");
+    }
+
+    private static void displayCustomer() {
+        System.out.println("\nDISPLAY CUSTOMER");
+        System.out.println("-".repeat(30));
+
+        if (accountManager.getAccountCount() == 0) {
+            System.out.println("No accounts available. Please create an account first.");
+            return;
+        }
+
+        String accountNumber = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
+        Account account = accountManager.findAccount(accountNumber);
+
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("CUSTOMER DETAILS");
+        System.out.println("=".repeat(40));
+
+        account.getCustomer().displayCustomerDetails();
+
+        System.out.println("\n" + "-".repeat(40));
+        System.out.println("Account Number: " + account.getAccountNumber());
+        System.out.println("Account Type: " + account.getAccountType());
+        System.out.printf("Current Balance: $%.2f%n", account.getBalance());
+        System.out.println("-".repeat(40));
     }
 
     private static void createAccount() {
@@ -79,7 +124,7 @@ public class Main {
         System.out.println("-".repeat(14));
 
         String name = InputValidator.getStringInput(scanner, "Enter customer name: ");
-        int age = InputValidator.getIntInput(scanner, "Enter customer age: ", 18, 120);
+        int age = InputValidator.getIntInput(scanner, "Enter customer age: ", 18, 100);
         String contact = InputValidator.getStringInput(scanner, "Enter contact number: ");
         String address = InputValidator.getStringInput(scanner, "Enter address: ");
 
@@ -153,8 +198,15 @@ public class Main {
             return;
         }
 
-        System.out.println("\nAccount Details:");
-        System.out.println("Customer: " + account.getCustomer().getName());
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("CUSTOMER DETAILS");
+        System.out.println("=".repeat(40));
+        account.getCustomer().displayCustomerDetails();
+
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("ACCOUNT DETAILS");
+        System.out.println("=".repeat(40));
+        System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Account Type: " + account.getAccountType());
         System.out.printf("Current Balance: $%.2f%n", account.getBalance());
 
@@ -233,9 +285,18 @@ public class Main {
             return;
         }
 
-        System.out.printf("%nAccount: %s - %s%n", accountNumber, account.getCustomer().getName());
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("CUSTOMER DETAILS");
+        System.out.println("=".repeat(40));
+        account.getCustomer().displayCustomerDetails();
+
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("ACCOUNT SUMMARY");
+        System.out.println("=".repeat(40));
+        System.out.printf("Account: %s - %s%n", accountNumber, account.getCustomer().getName());
         System.out.println("Account Type: " + account.getAccountType());
         System.out.printf("Current Balance: $%.2f%n\n", account.getBalance());
+
         transactionManager.viewTransactionsByAccount(accountNumber);
     }
 

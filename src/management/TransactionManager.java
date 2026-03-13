@@ -40,16 +40,16 @@ public class TransactionManager {
         }
 
         System.out.println("TRANSACTION HISTORY");
-        System.out.println("-".repeat(70));
+        System.out.println("-".repeat(80));
         System.out.printf("%-8s | %-20s | %-10s | %-12s | %-12s%n",
                 "TXN ID", "DATE/TIME", "TYPE", "AMOUNT", "BALANCE");
-        System.out.println("-".repeat(90));
+        System.out.println("-".repeat(80));
 
         for (int i = count - 1; i >= 0; i--) {
             accountTransactions[i].displayTransactionDetails();
         }
 
-        System.out.println("-".repeat(90));
+        System.out.println("-".repeat(80));
         System.out.printf("Total Transactions: %d%n", count);
         System.out.printf("Total Deposits: $%.2f%n", calculateTotalDeposits(accountNumber));
         System.out.printf("Total Withdrawals: $%.2f%n", calculateTotalWithdrawals(accountNumber));
