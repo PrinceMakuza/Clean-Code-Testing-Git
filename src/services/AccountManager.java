@@ -1,4 +1,4 @@
-package management;
+package services;
 
 import models.Account;
 import models.SavingsAccount;
