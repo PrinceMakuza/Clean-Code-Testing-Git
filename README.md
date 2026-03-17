@@ -10,34 +10,55 @@ A console-based banking application built with Java 21, following clean code pri
 - **Unit Testing**: JUnit 5 test suite for core logic verification.
 
 ## Project Structure
-```
+```text
 bank-account-management-system
 │
-├── src
+├── src/main/java
 │   ├── Main.java                # Application Entry Point
 │   ├── models/                  # Account and Transaction models
 │   ├── exceptions/              # Custom Exceptions
 │   ├── services/                # Business Logic Managers
-│   ├── utils/                   # Validation Utilities
-│   └── test/java/               # JUnit 5 Test Suite (AccountTest, etc.)
+│   └── utils/                   # Validation Utilities
 │
-├── docs
-│   └── git-workflow.md          # Git documentation
+├── src/test/java                # JUnit 5 Test Suite (AccountTest, etc.)
+├── docs/                        # Documentation
+├── pom.xml                      # Maven Configuration
 └── README.md
 ```
 
 ## How to Run
 1. Ensure Java 21 is installed.
-2. Compile the source: `javac -d out src/**/*.java`
-3. Run the application: `java -cp out Main`
+2. Compile and run using Maven:
+   ```bash
+   mvn clean compile exec:java -Dexec.mainClass="Main"
+   ```
+   Or manually:
+   ```bash
+   javac -d out -cp "lib/*" src/main/java/**/*.java
+   java -cp out Main
+   ```
 
-## Running Tests
-JUnit 5 tests are located in `src/test/java`.
-To run tests manually:
-1. Include JUnit 5 library in your classpath.
-2. Run the test classes using the JUnit console launcher.
+## Git Commands
+To manage the project history and store test results, use the following commands:
+```bash
+# Initialize git (if not already done)
+git init
+
+# Track all project files
+git add .
+
+# Commit changes with test summary
+git commit -m "feat: implement validations and refactor according to Google Java Style"
+
+# To push to a remote repository
+# git remote add origin <your-repo-url>
+# git push -u origin main
+```
 
 ## Design Principles
-- **Clean Code**: Meaningful naming, modular methods (under 25 lines), and JavaDoc comments.
+- **Style Guide**: Adheres to Google Java Style with 2-space indentation.
+- **Documentation**: Comprehensive Javadoc for all public methods.
+- **Clean Code**: Meaningful naming, modular methods, and robust error handling.
 - **Modular Design**: Separated responsibilities between models, services, and UI.
 - **Exception Handling**: Robust use of try-catch blocks and custom exceptions.
+
