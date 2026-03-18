@@ -378,6 +378,8 @@ public class Main {
    */
   private static void runTests() {
     System.out.println("\nRun mvn test command is terminal to run all system tests");
+    System.out.println("\nRun mvn -Dtest=TestClassName test to run individual test class");
+    System.out.println("\nRun mvn -Dtest=TestClassName#methodName test individual test Method class");
   }
 
   /**
