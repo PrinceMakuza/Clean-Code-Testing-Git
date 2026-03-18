@@ -10,6 +10,7 @@ public class InvalidAccountException extends Exception {
    *
    * @param message the detail message.
    */
+
   public InvalidAccountException(String message) {
     super(message);
   }
