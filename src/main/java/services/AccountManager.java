@@ -179,6 +179,7 @@ public class AccountManager {
    *
    * @return Account count.
    */
+
   public int getAccountCount() {
     return accountCount;
   }

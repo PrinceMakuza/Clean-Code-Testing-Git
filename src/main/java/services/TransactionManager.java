@@ -79,6 +79,7 @@ public class TransactionManager {
    *
    * @return Transaction count.
    */
+
   public int getTransactionCount() {
     return transactionCount;
   }
