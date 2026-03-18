@@ -10,6 +10,7 @@ public class InsufficientFundsException extends Exception {
    *
    * @param message the detail message.
    */
+
   public InsufficientFundsException(String message) {
     super(message);
   }

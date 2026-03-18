@@ -10,6 +10,7 @@ public class InvalidAmountException extends Exception {
    *
    * @param message the detail message.
    */
+
   public InvalidAmountException(String message) {
     super(message);
   }
