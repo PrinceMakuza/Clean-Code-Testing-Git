@@ -377,12 +377,7 @@ public class Main {
    * Runs system tests.
    */
   private static void runTests() {
-    System.out.println("\nRunning tests...\n");
-    System.out.println("Test: depositUpdatesBalance() ........ PASSED");
-    System.out.println("Test: withdrawBelowMinimumThrowsException() ........ PASSED");
-    System.out.println("Test: overdraftWithinLimitAllowed() ........ PASSED");
-    System.out.println("Test: overdraftExceedThrowsException() ........ PASSED");
-    System.out.println("\n✅ All tests passed successfully!");
+    System.out.println("\nRun mvn test command is terminal to run all system tests");
   }
 
   /**
