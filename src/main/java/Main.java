@@ -50,10 +50,6 @@ public class Main {
           new Transaction(acc1.getAccountNumber(), "DEPOSIT", 2000.00, 7250.00));
       transactionManager.addTransaction(
           new Transaction(acc1.getAccountNumber(), "WITHDRAWAL", 500.00, 6750.00));
-      transactionManager.addTransaction(
-          new Transaction(acc1.getAccountNumber(), "DEPOSIT", 1500.00, 8250.00));
-      transactionManager.addTransaction(
-          new Transaction(acc1.getAccountNumber(), "WITHDRAWAL", 3000.00, 5250.00));
 
       // For checking account sample
       transactionManager.addTransaction(
@@ -117,8 +113,8 @@ public class Main {
     System.out.println("3. Generate Account Statements");
     System.out.println("4. Run Tests");
     System.out.println("5. Exit");
-    // System.out.println("0. Back (Exit)");
-    // System.out.println("00. Cancel");
+    System.out.println("\n(0 Back)");
+    System.out.println("(00 Cancel action)");
   }
 
   /**
@@ -151,7 +147,7 @@ public class Main {
    */
   private static void viewIndividualAccount() {
     while (true) {
-      String accNum = InputValidator.getStringInput(scanner, "\nEnter Account Number (00 to cancel): ");
+      String accNum = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
       if (accNum.equals("00")) {
         return;
       }
@@ -201,7 +197,7 @@ public class Main {
    * @return The Customer object or null if cancelled.
    */
   private static Customer collectCustomerInfo() {
-    String namePrompt = "Enter customer name (Letters only, 00 to cancel): ";
+    String namePrompt = "Enter customer name: ";
     String name = InputValidator.getValidatedStringInput(scanner, namePrompt, "^[a-zA-Z\\s]+$|00",
         "Invalid name. Please use only letters and spaces.");
 
@@ -209,15 +205,15 @@ public class Main {
       return null;
     }
 
-    int age = InputValidator.getIntInput(scanner, "Enter age: ", 18, 100);
+    int age = InputValidator.getIntInput(scanner, "\nEnter age: ", 18, 100);
     if (age == -1 || age == 0) {
       return null;
     }
 
-    String contact = InputValidator.getValidatedStringInput(scanner, "Enter contact (10 digits): ",
+    String contact = InputValidator.getValidatedStringInput(scanner, "\nEnter contact: ",
         "^\\d{10}$", "Invalid contact. Please enter exactly 10 digits.");
 
-    String address = InputValidator.getStringInput(scanner, "Enter address: ");
+    String address = InputValidator.getStringInput(scanner, "\nEnter address: ");
 
     System.out.println(
         "\nCustomer Type: \n1. Regular(Standard banking services),\n2. Premium(Enhanced benefits, min balance $10,000)\n0. Back");
@@ -251,7 +247,7 @@ public class Main {
    */
   private static void performTransactions() {
     while (true) {
-      String accNum = InputValidator.getStringInput(scanner, "Enter Account Number (00 to cancel, 0 for back): ");
+      String accNum = InputValidator.getStringInput(scanner, "Enter Account Number: ");
       if (accNum.equals("00") || accNum.equals("0")) {
         return;
       }
@@ -378,8 +374,8 @@ public class Main {
    */
   private static void runTests() {
     System.out.println("\nRun mvn test command is terminal to run all system tests");
-    System.out.println("\nRun mvn -Dtest=TestClassName test to run individual test class");
-    System.out.println("\nRun mvn -Dtest=TestClassName#methodName test individual test Method class");
+    System.out.println("Run mvn -Dtest=TestClassName test to run individual test class");
+    System.out.println("Run mvn -Dtest=TestClassName#methodName test individual test Method class");
   }
 
   /**
