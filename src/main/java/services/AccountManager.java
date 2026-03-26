@@ -82,7 +82,6 @@ public class AccountManager {
     printHeader();
     printAccountRow(account);
     printAccountSpecialDetails(account);
-    System.out.println("-".repeat(80));
   }
 
   /**
@@ -112,7 +111,7 @@ public class AccountManager {
    * Prints the header for account listings.
    */
   private void printHeader() {
-    System.out.println("\nACCOUNT LISTING");
+    System.out.println("\nACCOUNT DETAILS");
     System.out.println("-".repeat(80));
     System.out.printf("%-8s | %-22s| %-12s   | %-14s | %-18s%n", "ACC NO", "CUSTOMER NAME", "TYPE",
         "BALANCE", "STATUS");
@@ -154,8 +153,7 @@ public class AccountManager {
   private void printAccountSpecialDetails(Account account) {
     if (account instanceof SavingsAccount sa) {
       System.out.printf("         | Interest: %.1f%% | Min Balance: $%.2f%n",
-          3.5, // Fixed for simplicity here
-          sa.getMinimumBalance());
+          3.5, sa.getMinimumBalance());
       System.out.println("-".repeat(80));
     } else if (account instanceof CheckingAccount ca) {
       System.out.printf("         | Overdraft: $%.2f | Monthly Fee: $%.2f%n",

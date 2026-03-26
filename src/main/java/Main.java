@@ -33,7 +33,7 @@ public class Main {
   }
 
   /**
-   * Initializes sample data for demonstration.
+   * Initializes sample data.
    */
   private static void initializeSampleData() {
     try {
@@ -46,6 +46,7 @@ public class Main {
       accountManager.addAccount(acc1);
       accountManager.addAccount(acc2);
 
+      // For Saving account sample
       transactionManager.addTransaction(
           new Transaction(acc1.getAccountNumber(), "DEPOSIT", 2000.00, 7250.00));
       transactionManager.addTransaction(
@@ -63,7 +64,7 @@ public class Main {
   }
 
   /**
-   * Runs the main application loop.
+   * Runs the main application.
    */
   private static void runApplication() {
     boolean running = true;
@@ -71,12 +72,10 @@ public class Main {
       displayMainMenu();
       int choice = InputValidator.getIntInput(scanner, "\nEnter your choice: ", 1, 5);
       try {
-        if (choice == -1 || choice == 5) {
-          running = false;
-          exitApplication();
-          continue;
+        if (choice == -1) {
+          continue; // 00 stays in main menu
         }
-        if (choice == 0) {
+        if (choice == 0 || choice == 5) {
           running = false;
           exitApplication();
           continue;
@@ -126,9 +125,12 @@ public class Main {
       System.out.println("2. View All Accounts");
       System.out.println("3. View Individual Account");
       System.out.println("0. Back");
-      int subChoice = InputValidator.getIntInput(scanner, "\nSelect: ", 1, 3);
+      int subChoice = InputValidator.getIntInput(scanner, "\nSelect: ", 0, 3);
 
-      if (subChoice == -1 || subChoice == 0) {
+      if (subChoice == -1) {
+        continue;
+      }
+      if (subChoice == 0) {
         return;
       }
 
@@ -137,7 +139,7 @@ public class Main {
         case 2 -> accountManager.viewAllAccounts();
         case 3 -> viewIndividualAccount();
       }
-      System.out.println("\nPress Enter to return to Manage Accounts...");
+      System.out.println("\nPress Enter to return...");
       scanner.nextLine();
     }
   }
@@ -149,13 +151,15 @@ public class Main {
     while (true) {
       String accNum = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
       if (accNum.equals("00")) {
+        continue;
+      }
+      if (accNum.equals("0")) {
         return;
       }
       try {
         Account account = accountManager.getAccount(accNum);
         accountManager.viewAccount(account);
-        System.out.println("✅ Account details displayed.");
-        return;
+        System.out.println("\n✅ Account details displayed.");
       } catch (InvalidAccountException e) {
         System.out.println("❌ Error: " + e.getMessage());
       }
@@ -167,6 +171,7 @@ public class Main {
    */
   private static void createAccount() {
     System.out.println("\nCREATE ACCOUNT");
+    System.out.println("--------------");
     Customer customer = collectCustomerInfo();
     if (customer == null) {
       return;
@@ -179,15 +184,22 @@ public class Main {
       return;
     }
 
-    double initialDeposit = InputValidator.getPositiveDoubleInput(scanner, "\nEnter initial deposit: $");
+    while (true) {
+      double initialDeposit = InputValidator.getPositiveDoubleInput(scanner, "\nEnter initial deposit: $");
+      if (initialDeposit == -1.0) {
+        return;
+      }
 
-    try {
-      Account account = (accType == 1) ? new SavingsAccount(customer, initialDeposit)
-          : new CheckingAccount(customer, initialDeposit);
+      try {
+        Account account = (accType == 1) ? new SavingsAccount(customer, initialDeposit)
+            : new CheckingAccount(customer, initialDeposit);
 
-      saveAccount(account, initialDeposit);
-    } catch (IllegalArgumentException e) {
-      System.out.println("❌ Error: " + e.getMessage());
+        saveAccount(account, initialDeposit);
+        return;
+      } catch (IllegalArgumentException e) {
+        System.out.println("❌ Error: " + e.getMessage());
+        System.out.println("Please try again.");
+      }
     }
   }
 
@@ -199,25 +211,25 @@ public class Main {
   private static Customer collectCustomerInfo() {
     String namePrompt = "Enter customer name: ";
     String name = InputValidator.getValidatedStringInput(scanner, namePrompt, "^[a-zA-Z\\s]+$|00",
-        "Invalid name. Please use only letters and spaces.");
+        "Invalid Input. Please Enter name with only letters.\n");
 
     if (name.equals("00")) {
       return null;
     }
 
-    int age = InputValidator.getIntInput(scanner, "\nEnter age: ", 18, 100);
+    int age = InputValidator.getIntInput(scanner, "Enter age: ", 18, 100);
     if (age == -1 || age == 0) {
       return null;
     }
 
-    String contact = InputValidator.getValidatedStringInput(scanner, "\nEnter contact: ",
-        "^\\d{10}$", "Invalid contact. Please enter exactly 10 digits.");
+    String contact = InputValidator.getValidatedStringInput(scanner, "Enter contact: ",
+        "^\\d{10}$", "Invalid contact. Please enter exactly 10 digits.\n");
 
-    String address = InputValidator.getStringInput(scanner, "\nEnter address: ");
+    String address = InputValidator.getStringInput(scanner, "Enter address: ");
 
     System.out.println(
         "\nCustomer Type: \n1. Regular(Standard banking services),\n2. Premium(Enhanced benefits, min balance $10,000)\n0. Back");
-    int custType = InputValidator.getIntInput(scanner, "Select: ", 1, 2);
+    int custType = InputValidator.getIntInput(scanner, "\nSelect: ", 1, 2);
     if (custType == -1 || custType == 0) {
       return null;
     }
@@ -236,9 +248,9 @@ public class Main {
     if (accountManager.addAccount(account)) {
       transactionManager.addTransaction(new Transaction(account.getAccountNumber(),
           "INITIAL DEPOSIT", initialDeposit, initialDeposit));
-      System.out.println("✅ Account created successfully. Account Number: " + account.getAccountNumber());
+      System.out.println("\n✅ Account created successfully. Account Number: " + account.getAccountNumber());
     } else {
-      System.out.println("❌ Error: Capacity full.");
+      System.out.println("❌ Error: While saving Account");
     }
   }
 
@@ -247,16 +259,19 @@ public class Main {
    */
   private static void performTransactions() {
     while (true) {
-      String accNum = InputValidator.getStringInput(scanner, "Enter Account Number: ");
-      if (accNum.equals("00") || accNum.equals("0")) {
+      String accNum = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
+      if (accNum.equals("00")) {
+        continue;
+      }
+      if (accNum.equals("0")) {
         return;
       }
       try {
         Account account = accountManager.getAccount(accNum);
         handleTransactionSelection(account);
-        return;
+        // After transaction finishes, continue the loop to allow more actions for this or another account.
       } catch (Exception e) {
-        System.out.println("\n❌ Transaction Failed: " + e.getMessage());
+        System.out.println("\n❌ " + e.getMessage());
         displayCurrentBalance(accNum);
       }
     }
@@ -269,17 +284,33 @@ public class Main {
    * @throws Exception if transaction fails.
    */
   private static void handleTransactionSelection(Account account) throws Exception {
-    System.out.println("1. Deposit\n2. Withdrawal\n3. Transfer\n0. Back");
-    int type = InputValidator.getIntInput(scanner, "Select type: ", 1, 3);
-    if (type == -1 || type == 0) {
-      return;
-    }
-    double amount = InputValidator.getPositiveDoubleInput(scanner, "Enter amount: $");
+    while (true) {
+      System.out.println("1. \nDeposit\n2. Withdrawal\n3. Transfer\n0. Back");
+      int type = InputValidator.getIntInput(scanner, "\nSelect type: ", 1, 3);
+      if (type == -1) {
+        continue;
+      }
+      if (type == 0) {
+        return;
+      }
+      while (true) {
+        double amount = InputValidator.getPositiveDoubleInput(scanner, "\nEnter amount: $");
+        if (amount == -1.0) {
+          break; // Break inner retry loop to stay in the selection menu
+        }
 
-    switch (type) {
-      case 1 -> executeDeposit(account, amount);
-      case 2 -> executeWithdrawal(account, amount);
-      case 3 -> executeTransfer(account, amount);
+        try {
+          switch (type) {
+            case 1 -> executeDeposit(account, amount);
+            case 2 -> executeWithdrawal(account, amount);
+            case 3 -> executeTransfer(account, amount);
+          }
+          break; // Successful transaction, back to transaction selection
+        } catch (Exception e) {
+          System.out.println("❌ Error: " + e.getMessage());
+          System.out.println("Please try again with a different amount.");
+        }
+      }
     }
   }
 
@@ -291,10 +322,14 @@ public class Main {
    * @throws InvalidAmountException if amount is invalid.
    */
   private static void executeDeposit(Account account, double amount) throws InvalidAmountException {
+    if (!InputValidator.getYesNoInput(scanner, "Confirm deposit of $" + String.format("%.2f", amount))) {
+      System.out.println("\n❌ Deposit cancelled.");
+      return;
+    }
     account.deposit(amount);
     transactionManager.addTransaction(
         new Transaction(account.getAccountNumber(), "DEPOSIT", amount, account.getBalance()));
-    System.out.println("✅ Deposit successful. New balance: $" + account.getBalance());
+    System.out.println("\n✅ Deposit successful. New balance: $" + account.getBalance());
   }
 
   /**
@@ -305,6 +340,10 @@ public class Main {
    * @throws Exception if withdrawal fails.
    */
   private static void executeWithdrawal(Account account, double amount) throws Exception {
+    if (!InputValidator.getYesNoInput(scanner, "Confirm withdrawal of $" + String.format("%.2f", amount))) {
+      System.out.println("Withdrawal cancelled.");
+      return;
+    }
     account.withdraw(amount);
     transactionManager.addTransaction(
         new Transaction(account.getAccountNumber(), "WITHDRAWAL", amount, account.getBalance()));
@@ -320,12 +359,17 @@ public class Main {
    */
   private static void executeTransfer(Account fromAccount, double amount) throws Exception {
     while (true) {
-      String destAccNum = InputValidator.getStringInput(scanner, "Enter Destination Account Number (00 to cancel): ");
+      String destAccNum = InputValidator.getStringInput(scanner, "Enter Destination Account Number: ");
       if (destAccNum.equals("00")) {
         return;
       }
       try {
         Account destAccount = accountManager.getAccount(destAccNum);
+        if (!InputValidator.getYesNoInput(scanner, "Confirm transfer of $" + String.format("%.2f", amount)
+                + " to Account " + destAccount.getAccountNumber())) {
+          System.out.println("Transfer cancelled.");
+          return;
+        }
         transactionManager.transfer(fromAccount, destAccount, amount);
         System.out.println("✅ Transfer successful.");
         return;
@@ -353,8 +397,11 @@ public class Main {
    */
   private static void generateStatement() {
     while (true) {
-      String accNum = InputValidator.getStringInput(scanner, "Enter Account Number (00 to cancel): ");
+      String accNum = InputValidator.getStringInput(scanner, "\nEnter Account Number: ");
       if (accNum.equals("00")) {
+        continue;
+      }
+      if (accNum.equals("0")) {
         return;
       }
       try {
@@ -362,7 +409,6 @@ public class Main {
         statementGenerator.generateStatement(account, transactionManager.getTransactions(),
             transactionManager.getTransactionCount());
         System.out.println("✅ Statement generated successfully.");
-        return;
       } catch (InvalidAccountException e) {
         System.out.println("❌ Error: " + e.getMessage());
       }

@@ -25,8 +25,12 @@ public class InputValidator {
    * @param errorMessage The error message to display if validation fails.
    * @return The validated string input.
    */
-  public static String getValidatedStringInput(Scanner scanner, String prompt, String regex,
-      String errorMessage) {
+  public static String getValidatedStringInput(
+          Scanner scanner,  // reads user input
+          String prompt,  // message shown to the user
+          String regex,  // pattern the input must match
+          String errorMessage)  // message shown if input is invalid
+  {
     while (true) {
       String input = getStringInput(scanner, prompt);
       if (input.matches(regex)) {
@@ -43,7 +47,7 @@ public class InputValidator {
    * @param prompt The prompt to display to the user.
    * @param min The minimum allowed value.
    * @param max The maximum allowed value.
-   * @return The integer input, or -1 for 00 (Cancel), or 0 for Back.
+   * @return The integer input, or -1.
    */
   public static int getIntInput(Scanner scanner, String prompt, int min, int max) {
     while (true) {
@@ -57,10 +61,10 @@ public class InputValidator {
         if (value == 0 || (value >= min && value <= max)) {
           return value;
         }
-        System.out.printf("Please enter a number between %d and %d (or 0 for Back, 00 for Cancel).%n",
+        System.out.printf("Please enter a number between %d and %d\n",
             min, max);
       } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter a number.");
+        System.out.println("Invalid input. Please enter a number.\n");
       }
     }
   }
@@ -76,13 +80,17 @@ public class InputValidator {
     while (true) {
       try {
         System.out.print(prompt);
-        double value = Double.parseDouble(scanner.nextLine().trim());
+        String input = scanner.nextLine().trim();
+        if (input.equals("00")) {
+          return -1.0; // -1 represents cancel
+        }
+        double value = Double.parseDouble(input);
         if (value > 0) {
           return value;
         }
-        System.out.println("Please enter a positive amount.");
+        System.out.println("Please enter a positive amount.\n");
       } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter a number.");
+        System.out.println("Invalid input. Please enter a number.\n");
       }
     }
   }
@@ -98,13 +106,14 @@ public class InputValidator {
     while (true) {
       System.out.print(prompt + " (Y/N): ");
       String input = scanner.nextLine().trim().toUpperCase();
+
       if (input.equals("Y")) {
         return true;
       }
       if (input.equals("N")) {
         return false;
       }
-      System.out.println("Please enter Y or N.");
+      System.out.println("Please enter Y or N.\n");
     }
   }
-}
+}

@@ -7,9 +7,6 @@ import models.Account;
 /**
  * Utility class for validating banking operations.
  */
-/**
- * Utility class for validating banking operations.
- */
 public class ValidationUtils {
 
   /**
@@ -20,7 +17,7 @@ public class ValidationUtils {
    */
   public static void validatePositiveAmount(double amount) throws InvalidAmountException {
     if (amount <= 0) {
-      throw new InvalidAmountException("Invalid amount. Amount must be greater than 0.");
+      throw new InvalidAmountException("Invalid amount. Amount must be greater than 0.\n");
     }
   }
 
@@ -33,7 +30,7 @@ public class ValidationUtils {
   public static void validateAccountExists(Object account) throws InvalidAccountException {
     if (account == null) {
       throw new InvalidAccountException(
-          "Account not found. Please check the account number and try again.");
+          "Account not found. Please check the account number and try again.\n");
     }
   }
 }

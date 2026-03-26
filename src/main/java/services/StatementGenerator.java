@@ -58,7 +58,6 @@ public class StatementGenerator {
     System.out.println("\n" + "-".repeat(50));
     System.out.printf("Net Change: %s$%.2f%n", (netChange >= 0 ? "+" : "-"), Math.abs(netChange));
     System.out.println("-".repeat(50));
-    System.out.println("✅ Statement generated successfully.");
   }
 }
 
