@@ -160,6 +160,7 @@ public class Main {
         Account account = accountManager.getAccount(accNum);
         accountManager.viewAccount(account);
         System.out.println("\n✅ Account details displayed.");
+        return;
       } catch (InvalidAccountException e) {
         System.out.println("❌ Error: " + e.getMessage());
       }
@@ -285,7 +286,7 @@ public class Main {
    */
   private static void handleTransactionSelection(Account account) throws Exception {
     while (true) {
-      System.out.println("1. \nDeposit\n2. Withdrawal\n3. Transfer\n0. Back");
+      System.out.println("\n1. Deposit\n2. Withdrawal\n3. Transfer\n0. Back");
       int type = InputValidator.getIntInput(scanner, "\nSelect type: ", 1, 3);
       if (type == -1) {
         continue;
@@ -360,6 +361,10 @@ public class Main {
   private static void executeTransfer(Account fromAccount, double amount) throws Exception {
     while (true) {
       String destAccNum = InputValidator.getStringInput(scanner, "Enter Destination Account Number: ");
+      if (destAccNum.equalsIgnoreCase(fromAccount.getAccountNumber())) {
+        System.out.println("❌ Error: Cannot transfer to the same account.");
+        continue;
+      }
       if (destAccNum.equals("00")) {
         return;
       }
@@ -409,6 +414,7 @@ public class Main {
         statementGenerator.generateStatement(account, transactionManager.getTransactions(),
             transactionManager.getTransactionCount());
         System.out.println("✅ Statement generated successfully.");
+        return;
       } catch (InvalidAccountException e) {
         System.out.println("❌ Error: " + e.getMessage());
       }
@@ -421,7 +427,7 @@ public class Main {
   private static void runTests() {
     System.out.println("\nRun mvn test command is terminal to run all system tests");
     System.out.println("Run mvn -Dtest=TestClassName test to run individual test class");
-    System.out.println("Run mvn -Dtest=TestClassName#methodName test individual test Method class");
+    System.out.println("Run mvn -Dtest=TestClassName#methodName test individual test Method in class");
   }
 
   /**
