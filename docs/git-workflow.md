@@ -39,6 +39,7 @@ git merge feature/testing
 
 # Cherry-picking a specific commit
 git checkout main
+git log
 git cherry-pick <commit-hash>
 
 # Pushing to origin
